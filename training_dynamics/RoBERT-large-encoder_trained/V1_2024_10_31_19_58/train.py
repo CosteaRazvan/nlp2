@@ -11,6 +11,7 @@ from sklearn.utils.class_weight import compute_class_weight
 from tqdm import tqdm
 import json
 
+
 from config import ModelConfig
 from utils import plot_metrics, plot_confusion_matrix
 
@@ -21,8 +22,6 @@ def set_bn_eval(m):
 
 def train(config: ModelConfig, model, train_loader, val_loader, version, class_weights):
     train_dynamics = {}
-    
-    {"guid": 50325, "logits_epoch_0": [2.943110942840576, -2.2836594581604004], "gold": 0, "device": "cuda:0"}
 
     # region initialize
     model.to(config.device)
@@ -94,7 +93,7 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
                 sample_label = labels[sample_id].item()
 
                 train_dynamics.append(
-                    {"guid": guid, f"logits_epoch_{epoch-1}": sample_logits, "gold": sample_label, "device": inputs.device.type}
+                    {"guid": str(guid), f"logits_epoch_{epoch-1}": str(sample_logits), "gold": str(sample_label), "device": inputs.device.type}
                 )
 
                 output_file = os.path.join(path_for_results, f"train_dynamics/dynamics_epoch_{epoch-1}.jsonl")
