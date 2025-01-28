@@ -84,7 +84,7 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
             # Save data for train dynamics
             for instance_id, instance_data in enumerate(data):
                 instance_logits = logits[instance_id]
-                instance_logits = list(instance_logits.cpu().numpy())
+                instance_logits = list(instance_logits.detach().cpu().numpy())
 
                 instance_label = labels[instance_id]
 
