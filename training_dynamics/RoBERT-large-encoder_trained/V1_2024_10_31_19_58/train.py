@@ -11,8 +11,8 @@ from sklearn.utils.class_weight import compute_class_weight
 from tqdm import tqdm
 import json
 
-from src.config import ModelConfig
-from src.utils import plot_metrics, plot_confusion_matrix
+from config import ModelConfig
+from utils import plot_metrics, plot_confusion_matrix
 
 def set_bn_eval(m):
     if isinstance(m, nn.BatchNorm2d) or isinstance(m, nn.BatchNorm1d):
