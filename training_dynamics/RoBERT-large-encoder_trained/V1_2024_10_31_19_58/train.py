@@ -52,6 +52,7 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
     
     os.makedirs(f"/kaggle/working/results/{config.name_model}", exist_ok=True)
     os.makedirs(f"/kaggle/working/results/{config.name_model}/train_dynamics", exist_ok=True)
+    os.makedirs(f"/kaggle/working/results/{config.name_model}/models", exist_ok=True)
     path_for_results = f"/kaggle/working/results/{config.name_model}/"
     # endregion
 
@@ -180,7 +181,7 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
 
         if epoch > 2:
             plot_metrics(epoch, train_losses, val_losses, f1_scores, macro_f1_scores, version, path_for_results)
-            path = f"models/model_e{epoch}_{config.name_model}_V{version}.pth"
+            path = f"/kaggle/working/results/{config.name_model}/models/model_e{epoch}_{config.name_model}_V{version}.pth"
             torch.save({
                 'epoch': config.num_epochs,
                 'model': model.state_dict(),
