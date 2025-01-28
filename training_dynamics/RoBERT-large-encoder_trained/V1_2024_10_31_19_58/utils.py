@@ -11,8 +11,8 @@ from tqdm.notebook import tqdm
 import os
 import seaborn as sns
 
-from src.config import config
-from src.dataset import NitroDataset
+from config import config
+from dataset import NitroDataset
 
 def plot_confusion_matrix(epoch, conf_matrix, version, path_for_results):
     plt.figure(figsize=(10, 7))
