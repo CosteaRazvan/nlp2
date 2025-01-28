@@ -99,7 +99,7 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
                 output_file = os.path.join(path_for_results, f"train_dynamics/dynamics_epoch_{epoch-1}.jsonl")
                 with open(output_file, "w") as file:
                     for entry in train_dynamics:
-                        file.write(json.dumps(str(entry)) + "\n")
+                        file.write(json.dumps(entry) + "\n")
 
             # Gradient Accumulation Step
             if (k + 1) % config.gradient_accumulation == 0 or (k + 1) == len(train_loader):
