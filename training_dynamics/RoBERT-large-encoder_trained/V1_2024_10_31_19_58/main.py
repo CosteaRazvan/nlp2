@@ -38,40 +38,29 @@ os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 
 
 path = '/kaggle/working/nlp2/data/train_data.csv'
+encoder_id = "readerbench/RoBERT-large"
 
-liquid = True
-avg = False
+encoder_name = encoder_id + 'encoder_trained'
 
-# for encoder_id in ["bert-base-multilingual-cased", "xlm-roberta-base", "readerbench/RoBERT-base"]:
-for liquid in [True, False]:
-    for encoder_id in [
-        "readerbench/RoBERT-large"
-        # "xlm-roberta-large"
-        ]:
+# source_dir = '/kaggle/working/nlp2/src/'  # Directory containing the experiment results
+# snapshots_dir = f'/kaggle/working/nlp2/snpashots/{encoder_name}'  # Directory where snapshots will be stored
+threshold = 50  # MB, files larger than this will be symbolically linked
 
-        for encoder_freeze in [False, True]:
-
-            encoder_name = encoder_id + f"-{'encoder_freeze' if encoder_freeze else 'encoder_trained'}" + ("-liquid" if liquid else "") + ("-avg" if avg else "")
-
-            # source_dir = '/kaggle/working/nlp2/src/'  # Directory containing the experiment results
-            # snapshots_dir = f'/kaggle/working/nlp2/snpashots/{encoder_name}'  # Directory where snapshots will be stored
-            threshold = 50  # MB, files larger than this will be symbolically linked
-
-            # version = make_snapshot(source_dir, snapshots_dir, threshold)
-            version = 1
+# version = make_snapshot(source_dir, snapshots_dir, threshold)
+version = 1
 
 
-            config.name_model = encoder_name.replace("/", "_")
+config.name_model = encoder_name.replace("/", "_")
 
-            # Initialize model
-            model = Classificator(encoder_id, encoder_freeze, liquid, avg)
-            model.to(config.device)
+# Initialize model
+model = Classificator(encoder_id, encoder_freeze=False, liquid=False, avg=False)
+model.to(config.device)
 
-            # Initialize tokenizer
-            tokenizer = AutoTokenizer.from_pretrained(encoder_id)
+# Initialize tokenizer
+tokenizer = AutoTokenizer.from_pretrained(encoder_id)
 
-            # Get data loaders
-            train_loader, val_loader, class_weights = get_dataloader(config, tokenizer, path)
+# Get data loaders
+train_loader, val_loader, class_weights = get_dataloader(config, tokenizer, path)
 
-            # Start training
-            train(config, model, train_loader, val_loader, version, class_weights)
+# Start training
+train(config, model, train_loader, val_loader, version, class_weights)

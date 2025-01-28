@@ -87,5 +87,5 @@ class Classificator(nn.Module):
             x = raw_output["last_hidden_state"].mean(dim=1)
         else:
             x = raw_output["pooler_output"]
-        out = self.classifier(x)
-        return out
+        out, logits = self.classifier(x)
+        return out, logits
