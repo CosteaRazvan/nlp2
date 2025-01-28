@@ -37,7 +37,7 @@ os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 # encoder_name = "BAAI/bge-m3"
 
 
-path = '/mnt/storage/Code/nlp/data/train_data.csv'
+path = '/kaggle/working/nlp2/data/train_data.csv'
 
 liquid = True
 avg = False
@@ -53,8 +53,8 @@ for liquid in [True, False]:
 
             encoder_name = encoder_id + f"-{'encoder_freeze' if encoder_freeze else 'encoder_trained'}" + ("-liquid" if liquid else "") + ("-avg" if avg else "")
 
-            source_dir = '/mnt/storage/Code/nlp/src/'  # Directory containing the experiment results
-            snapshots_dir = f'/mnt/storage/Code/nlp/snpashots/{encoder_name}'  # Directory where snapshots will be stored
+            # source_dir = '/kaggle/working/nlp2/src/'  # Directory containing the experiment results
+            # snapshots_dir = f'/kaggle/working/nlp2/snpashots/{encoder_name}'  # Directory where snapshots will be stored
             threshold = 50  # MB, files larger than this will be symbolically linked
 
             # version = make_snapshot(source_dir, snapshots_dir, threshold)

@@ -51,9 +51,9 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
                                                 num_warmup_steps=num_warmup_steps,
                                                 num_training_steps=num_train_steps)
     
-    os.makedirs(f"/mnt/storage/Code/nlp/results/{config.name_model}", exist_ok=True)
-    os.makedirs(f"/mnt/storage/Code/nlp/results/{config.name_model}/train_dynamics", exist_ok=True)
-    path_for_results = f"/mnt/storage/Code/nlp/results/{config.name_model}/"
+    os.makedirs(f"/kaggle/working/results/{config.name_model}", exist_ok=True)
+    os.makedirs(f"/kaggle/working/results/{config.name_model}/train_dynamics", exist_ok=True)
+    path_for_results = f"/kaggle/working/results/{config.name_model}/"
     # endregion
 
     for epoch in range(start_epoch+1, config.num_epochs+1):
