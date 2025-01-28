@@ -97,6 +97,11 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
                     {"guid": guid, f"logits_epoch_{epoch-1}": sample_logits, "gold": sample_label, "device": inputs.device.type}
                 )
 
+                output_file = os.path.join(path_for_results, f"train_dynamics/dynamics_epoch_{epoch-1}.jsonl")
+                with open(output_file, "w") as file:
+                    for entry in train_dynamics:
+                        file.write(json.dumps(str(entry)) + "\n")
+
             # Gradient Accumulation Step
             if (k + 1) % config.gradient_accumulation == 0 or (k + 1) == len(train_loader):
                 if config.mix_precision:
@@ -121,7 +126,7 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
         output_file = os.path.join(path_for_results, f"train_dynamics/dynamics_epoch_{epoch-1}.jsonl")
         with open(output_file, "w") as file:
             for entry in train_dynamics:
-                file.write(json.dumps(entry) + "\n")
+                file.write(json.dumps(str(entry)) + "\n")
 
         epoch_loss = epoch_loss / total_inputs
         train_losses.append(epoch_loss)
