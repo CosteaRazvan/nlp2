@@ -91,7 +91,7 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
 
                 sample_label = labels[sample_id].item()
 
-                train_dynamics = {"guid": guid, f"logits_epoch_{epoch-1}": sample_logits, "gold": sample_label, "device": inputs.device}
+                train_dynamics = {"guid": guid, f"logits_epoch_{epoch-1}": sample_logits, "gold": sample_label, "device": inputs.device.type}
                 print(train_dynamics)
 
             # Gradient Accumulation Step
