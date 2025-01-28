@@ -82,13 +82,15 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
                 loss.backward()
 
             # Save data for train dynamics
-            for instance_id, instance_data in enumerate(data):
-                instance_logits = logits[instance_id]
-                instance_logits = list(instance_logits.detach().cpu().numpy())
+            for sample_id in range(inputs.shape[0]):
+                guid = sample_id * (k+1)
 
-                instance_label = labels[instance_id]
+                sample_logits = logits[sample_id]
+                sample_logits = list(sample_logits.detach().cpu().numpy())
 
-                train_dynamics = {"guid": instance_id, f"logits_epoch_{epoch-1}": instance_logits, "gold": instance_label, "device": "cuda:0"}
+                sample_label = labels[sample_id]
+
+                train_dynamics = {"guid": guid, f"logits_epoch_{epoch-1}": sample_logits, "gold": sample_label, "device": "cuda:0"}
                 print(train_dynamics)
 
             # Gradient Accumulation Step
