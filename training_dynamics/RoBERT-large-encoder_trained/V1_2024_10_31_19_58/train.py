@@ -84,7 +84,7 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
             # Save data for train dynamics
             batch_size = inputs.shape[0]
             for sample_id in range(batch_size):
-                guid = (sample_id + batch_size) * k
+                guid = sample_id + batch_size * k
 
                 sample_logits = logits[sample_id]
                 sample_logits = list(sample_logits.detach().cpu().numpy())
