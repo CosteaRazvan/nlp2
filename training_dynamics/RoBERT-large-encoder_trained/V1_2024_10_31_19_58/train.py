@@ -143,7 +143,7 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
 
 
             with torch.no_grad():
-                outputs = model(inputs, masks)
+                outputs, logits = model(inputs, masks)
                 loss = criterion(outputs, labels)
                 epoch_loss += loss.item() * len(inputs)
                 
