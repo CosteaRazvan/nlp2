@@ -47,12 +47,14 @@ class MLP(nn.Module):
             nn.Dropout(0.25),
             nn.GELU(),
             nn.Linear(hidden_size*2, 5),
-            nn.Softmax(dim=1),
         )
+
+        self.softmax = nn.Softmax(dim=1)
     
     def forward(self, x):
-        x = self.seq(x)
-        return x
+        logits = self.seq(x)
+        out = self.softmax(logits)
+        return out, logits
 
 class Classificator(nn.Module):
     def __init__(self, encoder_name, encoder_freeze = False, liquid=False, avg=False):

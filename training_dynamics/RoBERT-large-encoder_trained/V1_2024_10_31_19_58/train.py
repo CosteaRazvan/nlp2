@@ -9,6 +9,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.utils.class_weight import compute_class_weight
 from tqdm import tqdm
+import json
 
 from src.config import ModelConfig
 from src.utils import plot_metrics, plot_confusion_matrix
@@ -19,6 +20,9 @@ def set_bn_eval(m):
 
 
 def train(config: ModelConfig, model, train_loader, val_loader, version, class_weights):
+    train_dynamics = {}
+    
+    {"guid": 50325, "logits_epoch_0": [2.943110942840576, -2.2836594581604004], "gold": 0, "device": "cuda:0"}
 
     # region initialize
     model.to(config.device)
@@ -48,10 +52,9 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
                                                 num_training_steps=num_train_steps)
     
     os.makedirs(f"/mnt/storage/Code/nlp/results/{config.name_model}", exist_ok=True)
+    os.makedirs(f"/mnt/storage/Code/nlp/results/{config.name_model}/train_dynamics", exist_ok=True)
     path_for_results = f"/mnt/storage/Code/nlp/results/{config.name_model}/"
     # endregion
-
-    
 
     for epoch in range(start_epoch+1, config.num_epochs+1):
     
@@ -70,13 +73,22 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
             # Scaling the loss by `gradient_accumulation`
             if config.mix_precision:
                 with autocast(device_type='cuda'):
-                    outputs = model(inputs, masks)
+                    outputs, logits = model(inputs, masks)
                     loss = criterion(outputs, labels) / config.gradient_accumulation
                 scaler.scale(loss).backward()
             else:
-                outputs = model(inputs, masks)
+                outputs, logits = model(inputs, masks)
                 loss = criterion(outputs, labels) / config.gradient_accumulation
                 loss.backward()
+
+            # Save data for train dynamics
+            for instance_id, instance_data in enumerate(data):
+                instance_logits = logits[instance_id]
+                instance_logits = list(instance_logits.cpu().numpy())
+
+                instance_label = labels[instance_id]
+
+                train_dynamics = {"guid": instance_id, f"logits_epoch_{epoch-1}": instance_logits, "gold": instance_label, "device": "cuda:0"}
 
             # Gradient Accumulation Step
             if (k + 1) % config.gradient_accumulation == 0 or (k + 1) == len(train_loader):
@@ -99,6 +111,8 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
                 with open(f'{path_for_results}metrics_log_V{version}.txt', 'a') as f:
                     f.write(f"Loss: {loss.item() * config.gradient_accumulation:.4f} Batch: {k} of {len(train_loader)}\n")
  
+        with open(os.path.join(path_for_results, f"train_dynamics/dynamics_epoch_{epoch-1}.jsonl")) as out_file:
+            json.dumps(train_dynamics, out_file)
 
         epoch_loss = epoch_loss / total_inputs
         train_losses.append(epoch_loss)

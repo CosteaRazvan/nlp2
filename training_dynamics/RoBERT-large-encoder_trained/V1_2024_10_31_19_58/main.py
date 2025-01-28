@@ -7,13 +7,10 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 import torch
 from transformers import AutoTokenizer
 
-from src.models import Classificator 
-from src.utils import get_dataloader
-from src.config import ModelConfig
-from src.train import train 
-from src.config import config
-
-from verisnap import make_snapshot
+from models import Classificator 
+from utils import get_dataloader
+from train import train 
+from config import config
 
 
 seed = 314 
@@ -60,7 +57,8 @@ for liquid in [True, False]:
             snapshots_dir = f'/mnt/storage/Code/nlp/snpashots/{encoder_name}'  # Directory where snapshots will be stored
             threshold = 50  # MB, files larger than this will be symbolically linked
 
-            version = make_snapshot(source_dir, snapshots_dir, threshold)
+            # version = make_snapshot(source_dir, snapshots_dir, threshold)
+            version = 1
 
 
             config.name_model = encoder_name.replace("/", "_")
