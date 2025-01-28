@@ -62,6 +62,8 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
         epoch_loss = 0.0
         total_inputs = 0
 
+        train_dynamics = []
+
         for k, data in enumerate(tqdm(train_loader)):
 
             # Unpack batch
@@ -91,8 +93,9 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
 
                 sample_label = labels[sample_id].item()
 
-                train_dynamics = {"guid": guid, f"logits_epoch_{epoch-1}": sample_logits, "gold": sample_label, "device": inputs.device.type}
-                print(train_dynamics)
+                train_dynamics.append(
+                    {"guid": guid, f"logits_epoch_{epoch-1}": sample_logits, "gold": sample_label, "device": inputs.device.type}
+                )
 
             # Gradient Accumulation Step
             if (k + 1) % config.gradient_accumulation == 0 or (k + 1) == len(train_loader):
@@ -115,8 +118,10 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
                 with open(f'{path_for_results}metrics_log_V{version}.txt', 'a') as f:
                     f.write(f"Loss: {loss.item() * config.gradient_accumulation:.4f} Batch: {k} of {len(train_loader)}\n")
  
-        with open(os.path.join(path_for_results, f"train_dynamics/dynamics_epoch_{epoch-1}.jsonl")) as out_file:
-            json.dumps(train_dynamics, out_file)
+        output_file = os.path.join(path_for_results, f"train_dynamics/dynamics_epoch_{epoch-1}.jsonl")
+        with open(output_file, "w") as file:
+            for entry in train_dynamics:
+                file.write(json.dumps(entry) + "\n")
 
         epoch_loss = epoch_loss / total_inputs
         train_losses.append(epoch_loss)
