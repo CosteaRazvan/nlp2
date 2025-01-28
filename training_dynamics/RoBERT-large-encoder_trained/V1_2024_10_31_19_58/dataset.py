@@ -3,7 +3,7 @@ import numpy as np
 from imblearn.over_sampling import RandomOverSampler
 from sklearn.preprocessing import LabelEncoder
 
-from src.config import config
+from config import config
 
 class NitroDataset(torch.utils.data.Dataset):
     def __init__(self, texts, targets, tokenizer, seq_len=config.max_length, oversample=False):

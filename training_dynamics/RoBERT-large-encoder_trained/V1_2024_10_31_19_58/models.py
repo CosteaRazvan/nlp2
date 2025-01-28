@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from transformers import AutoModel
 
-from src.config import config
+from config import config
 
 class LSTMNetwork(nn.Module):
     def __init__(self, input_dim, hidden_dim, output_dim, num_layers=1):
