@@ -91,8 +91,8 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
 
                 sample_label = labels[sample_id].item()
 
-                train_dynamics = {"guid": guid, f"logits_epoch_{epoch-1}": sample_logits, "gold": sample_label, "device": "cuda:0"}
-                # print(train_dynamics)
+                train_dynamics = {"guid": guid, f"logits_epoch_{epoch-1}": sample_logits, "gold": sample_label, "device": torch.cuda.get_device_name}
+                print(train_dynamics)
 
             # Gradient Accumulation Step
             if (k + 1) % config.gradient_accumulation == 0 or (k + 1) == len(train_loader):
