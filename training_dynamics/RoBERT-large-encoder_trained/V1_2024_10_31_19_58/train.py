@@ -82,13 +82,14 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
                 loss.backward()
 
             # Save data for train dynamics
-            for sample_id in range(inputs.shape[0]):
-                guid = sample_id * (k+1)
+            batch_size = inputs.shape[0]
+            for sample_id in range(batch_size):
+                guid = (sample_id + batch_size) * k
 
                 sample_logits = logits[sample_id]
                 sample_logits = list(sample_logits.detach().cpu().numpy())
 
-                sample_label = labels[sample_id]
+                sample_label = labels[sample_id].item()
 
                 train_dynamics = {"guid": guid, f"logits_epoch_{epoch-1}": sample_logits, "gold": sample_label, "device": "cuda:0"}
                 print(train_dynamics)
