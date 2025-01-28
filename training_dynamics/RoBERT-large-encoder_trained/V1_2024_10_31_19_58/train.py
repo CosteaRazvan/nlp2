@@ -89,6 +89,7 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
                 instance_label = labels[instance_id]
 
                 train_dynamics = {"guid": instance_id, f"logits_epoch_{epoch-1}": instance_logits, "gold": instance_label, "device": "cuda:0"}
+                print(train_dynamics)
 
             # Gradient Accumulation Step
             if (k + 1) % config.gradient_accumulation == 0 or (k + 1) == len(train_loader):
