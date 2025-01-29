@@ -179,16 +179,16 @@ def train(config: ModelConfig, model, train_loader, val_loader, version, class_w
         plot_confusion_matrix(epoch, conf_matrix, version, path_for_results)
 
 
-        if epoch > 2:
-            plot_metrics(epoch, train_losses, val_losses, f1_scores, macro_f1_scores, version, path_for_results)
-            path = f"/kaggle/working/results/{config.name_model}/models/model_e{epoch}_{config.name_model}_V{version}.pth"
-            torch.save({
-                'epoch': config.num_epochs,
-                'model': model.state_dict(),
-                'optimizer': optimizer.state_dict(),
-                'train_loss': train_losses,
-                'val_loss': val_losses,
-                'f1_scores': f1_scores,
-                'macro_f1_scores': macro_f1_scores,
-                'config': config.__dict__
-            }, path)
+        # if epoch == config.num_epochs:
+        #     plot_metrics(epoch, train_losses, val_losses, f1_scores, macro_f1_scores, version, path_for_results)
+        #     path = f"/kaggle/working/results/{config.name_model}/models/model_e{epoch}_{config.name_model}_V{version}.pth"
+        #     torch.save({
+        #         'epoch': config.num_epochs,
+        #         'model': model.state_dict(),
+        #         'optimizer': optimizer.state_dict(),
+        #         'train_loss': train_losses,
+        #         'val_loss': val_losses,
+        #         'f1_scores': f1_scores,
+        #         'macro_f1_scores': macro_f1_scores,
+        #         'config': config.__dict__
+        #     }, path)
